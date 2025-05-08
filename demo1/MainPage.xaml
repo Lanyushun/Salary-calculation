@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="demo1.MainPage"
+             BackgroundColor="#f5f5f5">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="25" Padding="20">
+
+            <!-- 标题 -->
+            <Label 
+                Text="工资计算器"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" 
+                Margin="0,20,0,0"/>
+
+            <!-- 输入区域 -->
+            <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" Padding="15" 
+                    BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="今日产品数量:" FontSize="22" TextColor="#333333"/>
+                    <Entry x:Name="ProductCountEntry" 
+                           Placeholder="请输入产品数量" 
+                           FontSize="28"
+                           Keyboard="Numeric"
+                           HorizontalTextAlignment="Center"
+                           HeightRequest="70"/>
+
+                    <Button x:Name="CalculateButton" 
+                            Text="计算工资" 
+                            FontSize="22"
+                            HeightRequest="60"
+                            BackgroundColor="#4caf50"
+                            TextColor="White"
+                            Clicked="OnCalculateClicked"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 当日计算结果 -->
+            <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" Padding="15" 
+                   BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="计算结果" FontSize="22" TextColor="#333333"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="档位费率:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="RateLabel" Text="0.00元/件" FontSize="18" TextColor="#333333"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="当日工资:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="DailyWageLabel" Text="0.00元" FontSize="18" TextColor="#333333"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="保存状态:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="StatusLabel" Text="未保存" FontSize="18" TextColor="#333333"/>
+                    </Grid>
+
+                    <Button x:Name="SaveButton" 
+                            Text="保存记录" 
+                            FontSize="18"
+                            BackgroundColor="#2196f3"
+                            TextColor="White"
+                            Clicked="OnSaveClicked"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 统计信息 -->
+            <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" Padding="15" 
+                   BackgroundColor="White">
+                <Border.Shadow>
+                    <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="工资统计" FontSize="22" TextColor="#333333"/>
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="10">
+                        <Label Grid.Row="0" Grid.Column="0" Text="今日总计:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="0" Grid.Column="1" x:Name="TodayTotalLabel" Text="0.00元" FontSize="18" TextColor="#333333"/>
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="本月总计:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="1" Grid.Column="1" x:Name="MonthTotalLabel" Text="0.00元" FontSize="18" TextColor="#333333"/>
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="累计总计:" FontSize="18" TextColor="#757575"/>
+                        <Label Grid.Row="2" Grid.Column="1" x:Name="AllTimeTotalLabel" Text="0.00元" FontSize="18" TextColor="#333333"/>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 查看历史按钮 -->
+            <Button Text="查看历史记录" 
+                    FontSize="18"
+                    BackgroundColor="#ff9800"
+                    TextColor="White"
+                    Clicked="OnViewHistoryClicked"/>
+
+            <!-- 在MainPage.xaml的VerticalStackLayout末尾添加 -->
+            <Button Text="关于我们" 
+   FontSize="18"
+   BackgroundColor="#9e9e9e"
+   TextColor="White"
+   Margin="0,10,0,0"
+   Clicked="OnAboutClicked"/>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

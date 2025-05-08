@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="demo1.AboutPage"
+             Title="关于App"
+             BackgroundColor="#f5f5f5">
+
+    <VerticalStackLayout Spacing="25" Padding="20" VerticalOptions="Center">
+        <!-- 应用标题 -->
+        <Label 
+            Text="工资计算器"
+            FontSize="36"
+            FontAttributes="Bold"
+            HorizontalOptions="Center" 
+            TextColor="#333333"
+            Margin="0,0,0,10"/>
+
+        <!-- 应用版本 -->
+        <Label 
+            Text="版本 1.0.0"
+            FontSize="18"
+            HorizontalOptions="Center" 
+            TextColor="#666666"/>
+
+        <!-- 应用描述 -->
+        <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" 
+                Padding="20" BackgroundColor="White" Margin="0,20,0,20">
+            <Border.Shadow>
+                <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
+            </Border.Shadow>
+            <VerticalStackLayout Spacing="15">
+                <Label Text="应用简介" FontSize="22" TextColor="#333333" FontAttributes="Bold"/>
+                <Label Text="这是一款为我的妈妈开发的简单实用的工资计算工具，根据产品数量自动计算不同档位的工资，并提供数据记录和统计功能。" 
+                       FontSize="16" TextColor="#444444" LineBreakMode="WordWrap"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- 联系方式 -->
+        <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" 
+                Padding="20" BackgroundColor="White">
+            <Border.Shadow>
+                <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
+            </Border.Shadow>
+            <VerticalStackLayout Spacing="15">
+                <Label Text="联系方式" FontSize="22" TextColor="#333333" FontAttributes="Bold"/>
+
+                <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto" ColumnSpacing="15">
+                    <Label Grid.Column="0" Text="QQ:" FontSize="18" TextColor="#666666" VerticalOptions="Center"/>
+                    <Label Grid.Column="1" x:Name="QQLabel" Text="2747155774" FontSize="18" TextColor="#2196f3" VerticalOptions="Center"/>
+                </Grid>
+
+                <Button Text="复制QQ号" 
+                        BackgroundColor="#2196f3"
+                        TextColor="White"
+                        HorizontalOptions="Center"
+                        Margin="0,10,0,0"
+                        Clicked="OnCopyQQClicked"/>
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- 版权信息 -->
+        <Label 
+            Text="© 2025 工资计算器 保留所有权利"
+            FontSize="14"
+            HorizontalOptions="Center" 
+            TextColor="#888888"
+            Margin="0,20,0,0"/>
+    </VerticalStackLayout>
+</ContentPage>
