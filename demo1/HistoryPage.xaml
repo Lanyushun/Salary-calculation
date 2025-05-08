@@ -1,71 +1,144 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:demo1.Converters"
+             xmlns:models="clr-namespace:demo1.Models" xmlns:sys="clr-namespace:System;assembly=netstandard"
              x:Class="demo1.HistoryPage"
              Title="工资历史"
              BackgroundColor="#f5f5f5">
 
-    <VerticalStackLayout Spacing="20" Padding="20">
-        <!-- 标签切换 -->
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="10">
+    <ContentPage.Resources>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto" Padding="10" RowSpacing="10">
+
+        <Grid Grid.Row="0" ColumnDefinitions="*,*,*,*" ColumnSpacing="5">
             <Button x:Name="TodayButton" 
-                    Text="今日记录" 
+                    Text="今日" 
+                    Grid.Column="0"
                     Clicked="OnTodayClicked"
-                    BackgroundColor="#4caf50"
-                    TextColor="White"/>
+                    BackgroundColor="#9e9e9e" TextColor="White"/>
+
             <Button x:Name="MonthButton" 
-                    Text="本月记录" 
+                    Text="本月" 
+                    Grid.Column="1"
                     Clicked="OnMonthClicked"
-                    BackgroundColor="#9e9e9e"
-                    TextColor="White"/>
+                    BackgroundColor="#9e9e9e" TextColor="White"/>
+
+            <Button x:Name="YearButton" 
+                    Text="本年" 
+                    Grid.Column="2"
+                    Clicked="OnYearClicked"
+                    BackgroundColor="#9e9e9e" TextColor="White"/>
+
             <Button x:Name="AllButton" 
-                    Text="所有记录" 
+                    Text="所有" 
+                    Grid.Column="3"
                     Clicked="OnAllClicked"
-                    BackgroundColor="#9e9e9e"
-                    TextColor="White"/>
-        </HorizontalStackLayout>
+                    BackgroundColor="#9e9e9e" TextColor="White"/>
+        </Grid>
 
-        <!-- 统计显示 -->
-        <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" Padding="15" 
-               BackgroundColor="White">
-            <Border.Shadow>
-                <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
-            </Border.Shadow>
-            <VerticalStackLayout>
-                <Label x:Name="CurrentViewLabel" 
-                       Text="今日记录" 
-                       FontSize="20" 
-                       HorizontalOptions="Center"
-                       Margin="0,0,0,10"/>
-                <Label x:Name="TotalLabel" 
-                       Text="总计: 0.00元" 
-                       FontSize="18" 
-                       HorizontalOptions="Center"/>
-            </VerticalStackLayout>
-        </Border>
+        <Grid Grid.Row="1" ColumnDefinitions="Auto,*,Auto,*,Auto" ColumnSpacing="10" VerticalOptions="Center">
+            <Label Text="从:" Grid.Column="0" VerticalOptions="Center"/>
+            <DatePicker x:Name="StartDatePicker" Grid.Column="1" 
+                        Format="yyyy-MM-dd" Date="{x:Static sys:DateTime.Today}"/>
 
-        <!-- 记录列表 -->
-        <Border Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 10,10,10,10" Padding="5" 
-              BackgroundColor="White" HeightRequest="400">
-            <Border.Shadow>
-                <Shadow Brush="#22000000" Offset="0,2" Radius="6" Opacity="0.5" />
-            </Border.Shadow>
-            <CollectionView x:Name="RecordsCollection">
+            <Label Text="至:" Grid.Column="2" VerticalOptions="Center" Margin="10,0,0,0"/>
+            <DatePicker x:Name="EndDatePicker" Grid.Column="3" 
+                        Format="yyyy-MM-dd" Date="{x:Static sys:DateTime.Today}"/>
+
+            <Button x:Name="SearchButton" 
+                    Text="查询" 
+                    Grid.Column="4"
+                    Clicked="OnSearchClicked"
+                    BackgroundColor="#2196f3"
+                    TextColor="White"
+                    Padding="10,0"/>
+        </Grid>
+
+        <Grid Grid.Row="2" RowDefinitions="Auto,*" VerticalOptions="FillAndExpand">
+            <Grid Grid.Row="0" ColumnDefinitions="Auto,2.5*,1.5*,1.5*,2.5*" BackgroundColor="#e0e0e0" Padding="8,5,8,5">
+                <Label Text="ID" Grid.Column="0" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,5,0"/>
+                <Label Text="日期" Grid.Column="1" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Text="产品数量" Grid.Column="2" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Text="费率" Grid.Column="3" FontAttributes="Bold" HorizontalOptions="Center"/>
+                <Label Text="工资" Grid.Column="4" FontAttributes="Bold" HorizontalOptions="Center" Margin="0,0,5,0"/>
+                <Label Text="操作" Grid.Column="5" FontAttributes="Bold" HorizontalOptions="Center"/>
+            </Grid>
+
+            <Label x:Name="EmptyViewLabel" 
+                   Text="没有找到符合条件的记录。" 
+                   Grid.Row="1" 
+                   IsVisible="False" 
+                   HorizontalOptions="Center" 
+                   VerticalOptions="Center" 
+                   TextColor="Gray"/>
+
+            <CollectionView Grid.Row="1" x:Name="RecordsTable" VerticalOptions="FillAndExpand">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <Border Margin="5" Padding="10" Stroke="#eeeeee" StrokeThickness="1" 
-                                BackgroundColor="White" StrokeShape="RoundRectangle 5,5,5,5">
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
-                                <Label Grid.Row="0" Grid.Column="0" Text="{Binding Date, StringFormat='{0:yyyy-MM-dd HH:mm}'}" FontSize="16" TextColor="#333333"/>
-                                <Label Grid.Row="0" Grid.Column="1" Text="{Binding DailyWage, StringFormat='{0:F2}元'}" FontSize="18" FontAttributes="Bold" TextColor="#4caf50"/>
+                        <Grid ColumnDefinitions="Auto,2.5*,1.5*,1.5*,1.5*,2.5*" Padding="8,10,8,10">
+                            <Grid.GestureRecognizers>
+                            </Grid.GestureRecognizers>
+                            <VisualStateManager.VisualStateGroups>
+                                <VisualStateGroup Name="CommonStates">
+                                    <VisualState Name="Normal" />
+                                    <VisualState Name="Selected">
+                                        <VisualState.Setters>
+                                            <Setter Property="BackgroundColor" Value="#e0e0e0" />
+                                        </VisualState.Setters>
+                                    </VisualState>
+                                </VisualStateGroup>
+                            </VisualStateManager.VisualStateGroups>
+                            <Grid.Style>
+                                <Style TargetType="Grid">
+                                    <Setter Property="BackgroundColor" Value="{Binding IsEven, Converter={StaticResource BoolToColorConverter}}"/>
+                                </Style>
+                            </Grid.Style>
 
-                                <Label Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding ProductCount, StringFormat='产品数量: {0}件'}" FontSize="14" TextColor="#757575"/>
-                                <Label Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Text="{Binding Rate, StringFormat='费率: {0:F2}元/件'}" FontSize="14" TextColor="#757575"/>
-                            </Grid>
-                        </Border>
+                            <Label Text="{Binding Id}" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Label Text="{Binding Date, StringFormat='{0:yyyy-MM-dd}'}" Grid.Column="1" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Label Text="{Binding ProductCount}" Grid.Column="2" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Label Text="{Binding Rate, StringFormat='{0:F2}元'}" Grid.Column="3" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <Label Text="{Binding DailyWage, StringFormat='{0:F2}元'}" Grid.Column="4" HorizontalOptions="Center" VerticalOptions="Center"/>
+                            <HorizontalStackLayout Grid.Column="5" HorizontalOptions="Center" Spacing="5" VerticalOptions="Center">
+                                <Button Text="编辑" 
+                                        BackgroundColor="#2196f3" 
+                                        TextColor="White"
+                                        FontSize="12"
+                                        HeightRequest="35"
+                                        WidthRequest="55"
+                                        Padding="5,0"
+                                        CommandParameter="{Binding Id}"
+                                        Clicked="OnEditClicked"/>
+                                <Button Text="删除" 
+                                        BackgroundColor="#f44336" 
+                                        TextColor="White"
+                                        FontSize="12"
+                                        HeightRequest="35"
+                                        WidthRequest="55"
+                                        Padding="5,0"
+                                        CommandParameter="{Binding Id}"
+                                        Clicked="OnDeleteClicked"/>
+                            </HorizontalStackLayout>
+                        </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
             </CollectionView>
+        </Grid>
+
+        <Border Grid.Row="3" Padding="10" BackgroundColor="White" Stroke="#e0e0e0" StrokeThickness="1" StrokeShape="RoundRectangle 5,5,5,5">
+            <Grid ColumnDefinitions="Auto,*,Auto,*,Auto,*" ColumnSpacing="10">
+                <Label Text="总件数:" Grid.Column="0" FontAttributes="Bold" VerticalOptions="Center"/>
+                <Label x:Name="TotalCountLabel" Grid.Column="1" Text="0件" VerticalOptions="Center"/>
+
+                <Label Text="平均费率:" Grid.Column="2" FontAttributes="Bold" VerticalOptions="Center"/>
+                <Label x:Name="AverageRateLabel" Grid.Column="3" Text="0.00元" VerticalOptions="Center"/>
+
+                <Label Text="总工资:" Grid.Column="4" FontAttributes="Bold" VerticalOptions="Center"/>
+                <Label x:Name="TotalWageLabel" Grid.Column="5" Text="0.00元" FontAttributes="Bold" TextColor="#4caf50" VerticalOptions="Center"/>
+            </Grid>
         </Border>
-    </VerticalStackLayout>
+
+    </Grid>
 </ContentPage>

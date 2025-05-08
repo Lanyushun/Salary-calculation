@@ -28,18 +28,19 @@ namespace demo1
             LoadStatisticsAsync();
         }
 
-        private async 
-        Task
-LoadStatisticsAsync()
+
+        private async Task LoadStatisticsAsync()
         {
             try
             {
                 var todayTotal = await _wageService.GetTodayTotalWageAsync();
                 var monthTotal = await _wageService.GetMonthTotalWageAsync();
+                var yearTotal = await _wageService.GetCurrentYearTotalWageAsync();
                 var allTimeTotal = await _wageService.GetTotalWageAsync();
 
                 TodayTotalLabel.Text = $"{todayTotal:F2}元";
                 MonthTotalLabel.Text = $"{monthTotal:F2}元";
+                YearTotalLabel.Text = $"{yearTotal:F2}元";
                 AllTimeTotalLabel.Text = $"{allTimeTotal:F2}元";
             }
             catch (Exception ex)
@@ -82,7 +83,11 @@ LoadStatisticsAsync()
                     return;
                 }
 
-                await _wageService.SaveRecordAsync(_currentProductCount);
+                // 获取选择的日期
+                DateTime selectedDate = RecordDatePicker.Date;
+
+                // 使用选择的日期保存记录
+                await _wageService.SaveRecordAsync(_currentProductCount, selectedDate);
                 StatusLabel.Text = "已保存";
                 await LoadStatisticsAsync();
 
@@ -96,6 +101,8 @@ LoadStatisticsAsync()
                     _currentProductCount = 0;
                     _currentRate = 0;
                     _currentWage = 0;
+                    // 重置日期为当天
+                    RecordDatePicker.Date = DateTime.Today;
                 }
             }
             catch (Exception ex)

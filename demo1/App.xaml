@@ -2,9 +2,14 @@
 <Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:demo1"
+             xmlns:converters="clr-namespace:demo1.Converters"
              x:Class="demo1.App">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- 合并颜色转换器资源字典 -->
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+
+            <!-- 合并原有的资源字典 -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
                 <ResourceDictionary Source="Resources/Styles/Styles.xaml" />

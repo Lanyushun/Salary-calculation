@@ -32,15 +32,21 @@ namespace demo1.Services
             return productCount * rate;
         }
 
-        // 保存记录
+        // 原有方法保留，以保持向后兼容性
         public async Task SaveRecordAsync(int productCount)
+        {
+            await SaveRecordAsync(productCount, DateTime.Now);
+        }
+
+        // 保存记录（支持自定义日期）
+        public async Task SaveRecordAsync(int productCount, DateTime recordDate)
         {
             var rate = CalculateRate(productCount);
             var wage = CalculateDailyWage(productCount);
 
             var record = new WageRecord
             {
-                Date = DateTime.Now,
+                Date = recordDate, // 使用指定的日期
                 ProductCount = productCount,
                 Rate = rate,
                 DailyWage = wage
@@ -91,11 +97,63 @@ namespace demo1.Services
             return records.Sum(r => r.DailyWage);
         }
 
+        // 获取指定年份的记录
+        public async Task<List<WageRecord>> GetYearRecordsAsync(int year)
+        {
+            var firstDayOfYear = new DateTime(year, 1, 1);
+            var firstDayOfNextYear = new DateTime(year + 1, 1, 1);
+
+            return await _database.QueryAsync<WageRecord>(
+                "SELECT * FROM WageRecord WHERE Date >= ? AND Date < ? ORDER BY Date DESC",
+                firstDayOfYear.Ticks, firstDayOfNextYear.Ticks);
+        }
+
+        // 获取当年记录
+        public async Task<List<WageRecord>> GetCurrentYearRecordsAsync()
+        {
+            int currentYear = DateTime.Now.Year;
+            return await GetYearRecordsAsync(currentYear);
+        }
+
+        // 计算当年总工资
+        public async Task<double> GetYearTotalWageAsync(int year)
+        {
+            var records = await GetYearRecordsAsync(year);
+            return records.Sum(r => r.DailyWage);
+        }
+
+        // 计算当年总工资
+        public async Task<double> GetCurrentYearTotalWageAsync()
+        {
+            int currentYear = DateTime.Now.Year;
+            return await GetYearTotalWageAsync(currentYear);
+        }
+
         // 计算总工资
         public async Task<double> GetTotalWageAsync()
         {
             var records = await GetAllRecordsAsync();
             return records.Sum(r => r.DailyWage);
+        }
+
+        // 按自定义日期范围查询记录
+        public async Task<List<WageRecord>> GetCustomDateRangeRecordsAsync(DateTime startDate, DateTime endDate)
+        {
+            return await _database.QueryAsync<WageRecord>(
+                "SELECT * FROM WageRecord WHERE Date >= ? AND Date < ? ORDER BY Date DESC",
+                startDate.Ticks, endDate.Ticks);
+        }
+
+        // 更新记录
+        public async Task UpdateRecordAsync(WageRecord record)
+        {
+            await _database.UpdateAsync(record);
+        }
+
+        // 删除记录
+        public async Task DeleteRecordAsync(int recordId)
+        {
+            await _database.DeleteAsync<WageRecord>(recordId);
         }
     }
 }
